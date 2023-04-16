@@ -34,6 +34,10 @@ def get_wines():
 @app.route('/producers')
 def get_producers():
     producers = [producer.serialize() for producer in Producer.query.all()]
+    # res = {}
+    # for producer in producers:
+    #     wines = [wine.serialize() for wine in Wine.query.filter_by(producer_id=producer.id).all()]
+    #     res[producer.name] = wines
     return jsonify(producers)
 
 @app.route('/producers/<int:id>')

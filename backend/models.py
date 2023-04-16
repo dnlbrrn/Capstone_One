@@ -25,6 +25,12 @@ class Wine(db.Model):
 
     def serialize(self):
         varietals = [v.varietals.name for v in self.varietals] if self.varietals else None
+        v = ''
+        for var in varietals:
+            if varietals.index(var) + 1 != len(varietals):
+                v = v + var + ',' + ' '
+            else:
+                v = v + var
         return {
             'id': self.id,
             'name': self.name,
@@ -37,7 +43,7 @@ class Wine(db.Model):
             'frontline': self.frontline,
             'discount': self.discount,
             'low_stock': self.low_stock,
-            'varietals': varietals
+            'varietals': v
         }
 
 class Producer(db.Model):

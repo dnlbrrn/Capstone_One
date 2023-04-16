@@ -1,25 +1,133 @@
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react';
+import { useState, useEffect } from 'react';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { TableVirtuoso } from 'react-virtuoso';
+import axios from 'axios';
+import Footer from './Footer';
+import Search from './Search';
 
-function App() {
+const columns = [
+  {
+    width: 200,
+    label: 'Producer',
+    dataKey: 'producer',
+  },
+  {
+    width: 400,
+    label: 'Cuv\u00E9e',
+    dataKey: 'name',
+  },
+  {
+    width: 120,
+    label: 'Country',
+    dataKey: 'country',
+  },
+  {
+    width: 120,
+    label: 'Region',
+    dataKey: 'region',
+  },
+  {
+    width: 120,
+    label: 'Sub Region',
+    dataKey: 'subregion',
+  },
+  {
+    width: 200,
+    label: 'Varietals',
+    dataKey: 'varietals',
+  }
+];
+
+const VirtuosoTableComponents = {
+  Scroller: React.forwardRef((props, ref) => (
+    <TableContainer component={Paper} {...props} ref={ref} />
+  )),
+  Table: (props) => (
+    <Table {...props} sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }} />
+  ),
+  TableHead,
+  TableRow: ({ item: _item, ...props }) => <TableRow {...props} />,
+  TableBody: React.forwardRef((props, ref) => <TableBody {...props} ref={ref} />),
+};
+
+function fixedHeaderContent() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <TableRow>
+      {columns.map((column) => (
+        <TableCell
+          key={column.dataKey}
+          variant="head"
+          align={column.numeric || false ? 'right' : 'left'}
+          style={{ width: column.width }}
+          sx={{
+            backgroundColor: 'background.paper',
+          }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          {column.label}
+        </TableCell>
+      ))}
+    </TableRow>
   );
 }
 
-export default App;
+function rowContent(_index, row) {
+  return (
+    <React.Fragment>
+      {columns.map((column) => (
+        <TableCell
+          key={column.dataKey}
+          align={column.numeric || false ? 'right' : 'left'}
+        >
+          {row[column.dataKey]}
+        </TableCell>
+      ))}
+    </React.Fragment>
+  );
+}
+
+export default function ReactVirtualizedTable() {
+  const [wines, setWines] = useState(null)
+  const [searchValue, setSearchValue] = useState('')
+  console.log('searchvalue', searchValue)
+  useEffect(() => {
+    const getWines = async () => {
+      try {
+        const response = await axios.get('/wines');
+        if (searchValue != '') {
+          const regEx = new RegExp(searchValue, 'i')
+          console.log(regEx)
+          const w = response.data.filter(res => regEx.test(res.name) || regEx.test(res.producer) || regEx.test(res.country))
+          console.log(w)
+          setWines(w)
+        } else {
+          setWines(response.data)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getWines()
+  }, [searchValue])
+
+  return (
+    <>
+      <Paper style={{ height: '80vh', width: '100%' }}>
+        <TableVirtuoso
+          data={wines}
+          components={VirtuosoTableComponents}
+          fixedHeaderContent={fixedHeaderContent}
+          itemContent={rowContent}
+        />
+      </Paper>
+      <Search callback={(searchValue) => setSearchValue(searchValue)} />
+      <Footer />
+    </>
+  );
+}
