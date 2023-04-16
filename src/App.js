@@ -24,22 +24,32 @@ const columns = [
     dataKey: 'name',
   },
   {
-    width: 120,
+    width: 60,
+    label: 'Frontline',
+    dataKey: 'frontline',
+  },
+  {
+    width: 60,
+    label: 'Discount',
+    dataKey: 'discount',
+  },
+  {
+    width: 80,
     label: 'Country',
     dataKey: 'country',
   },
   {
-    width: 120,
+    width: 80,
     label: 'Region',
     dataKey: 'region',
   },
   {
-    width: 120,
+    width: 80,
     label: 'Sub Region',
     dataKey: 'subregion',
   },
   {
-    width: 200,
+    width: 180,
     label: 'Varietals',
     dataKey: 'varietals',
   }
@@ -81,14 +91,15 @@ function rowContent(_index, row) {
   return (
     <React.Fragment>
       {columns.map((column) => (
-        <TableCell
+        <TableCell style={row.low_stock ? { color: 'red' } : { color: 'black' }}
           key={column.dataKey}
           align={column.numeric || false ? 'right' : 'left'}
         >
           {row[column.dataKey]}
         </TableCell>
-      ))}
-    </React.Fragment>
+      ))
+      }
+    </React.Fragment >
   );
 }
 
@@ -100,14 +111,13 @@ export default function ReactVirtualizedTable() {
     const getWines = async () => {
       try {
         const response = await axios.get('/wines');
+        console.log(response.data)
         if (searchValue != '') {
           const regEx = new RegExp(searchValue, 'i')
-          console.log(regEx)
-          const w = response.data.filter(res => regEx.test(res.name) || regEx.test(res.producer) || regEx.test(res.country))
-          console.log(w)
-          setWines(w)
+          const w = response.data.filter(res => regEx.test(res.name) || regEx.test(res.producer) || regEx.test(res.country) || regEx.test(res.varietals))
+          setWines(w.filter(wine => wine.is_active === true))
         } else {
-          setWines(response.data)
+          setWines(response.data.filter(wine => wine.is_active === true))
         }
       } catch (error) {
         console.log(error)

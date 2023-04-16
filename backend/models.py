@@ -26,11 +26,12 @@ class Wine(db.Model):
     def serialize(self):
         varietals = [v.varietals.name for v in self.varietals] if self.varietals else None
         v = ''
-        for var in varietals:
-            if varietals.index(var) + 1 != len(varietals):
-                v = v + var + ',' + ' '
-            else:
-                v = v + var
+        if varietals:
+            for var in varietals:
+                if varietals.index(var) + 1 != len(varietals):
+                    v = v + var + ',' + ' '
+                else:
+                    v = v + var
         return {
             'id': self.id,
             'name': self.name,
@@ -43,6 +44,7 @@ class Wine(db.Model):
             'frontline': self.frontline,
             'discount': self.discount,
             'low_stock': self.low_stock,
+            'is_active': self.is_active,
             'varietals': v
         }
 
@@ -53,11 +55,6 @@ class Producer(db.Model):
     external_id = db.Column(db.Integer)
     external_source = db.Column(db.Text)
     wines = db.relationship('Wine', backref='producers')
-    def serialize(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-        }
 
 class Country(db.Model):
     __tablename__ = 'countries'

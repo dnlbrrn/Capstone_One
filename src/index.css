@@ -22,6 +22,17 @@ img {
 .footer {
   padding: 10px;
   display: flex;
-  justify-content: space-around;
-  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.searchBar {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+button {
+  margin: 10px;
 }
