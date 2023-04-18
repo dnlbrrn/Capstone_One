@@ -14,12 +14,12 @@ import Search from './Search';
 
 const columns = [
   {
-    width: 200,
+    width: 150,
     label: 'Producer',
     dataKey: 'producer',
   },
   {
-    width: 400,
+    width: 300,
     label: 'Cuv\u00E9e',
     dataKey: 'name',
   },
@@ -128,7 +128,7 @@ export default function ReactVirtualizedTable() {
 
   return (
     <>
-      <Paper style={{ height: '80vh', width: '100%' }}>
+      <Paper style={{ height: '75vh', width: '100%' }}>
         <TableVirtuoso
           data={wines}
           components={VirtuosoTableComponents}
