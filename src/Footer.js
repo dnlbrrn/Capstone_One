@@ -12,12 +12,11 @@ const Footer = () => {
             }
         }
         getWines()
-        window.location.reload(false);
+        window.location.reload();
     }
     return (
         <div className="footer">
             <a href="http://www.sylvesterrovine.com"><img src="http://images.squarespace-cdn.com/content/v1/57573cac59827e8954e6acf9/1466729378387-AAPKYK0OANIG2L51J1KK/dark_logo_white_background.jpg?format=1500w" alt="Sylvester/Rovine Logo" /></a>
-            <button onClick={updateWines}>Update Wines</button>
         </div >
     )
 }
