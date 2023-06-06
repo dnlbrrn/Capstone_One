@@ -149,7 +149,7 @@ export default function EnhancedTable() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(15);
   const [wines, setWines] = useState([])
   const [searchValue, setSearchValue] = useState('')
   const [tableValue, setTableValue] = useState('producer')
@@ -259,7 +259,7 @@ export default function EnhancedTable() {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[15, 20, 25]}
             component="div"
             count={wines.length}
             rowsPerPage={rowsPerPage}
