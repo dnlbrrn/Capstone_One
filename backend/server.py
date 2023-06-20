@@ -32,7 +32,9 @@ def get_frontline(prices, id):
 
 
 def wines_to_db():
-    print('I am printing first')
+    # Connect to Vinosmith API and collect relevant data, compare each wine to data on our database
+    # saving wines that exist in inventory but are not on the database, inactivate wines that are on the database
+    # but are out of stock. 
     url_wines = 'https://private-anon-b97c5a28b1-vinosmith.apiary-proxy.com/api/distributor/wines'
     url_prices = 'https://private-anon-b97c5a28b1-vinosmith.apiary-proxy.com/api/distributor/prices'
     url_inventory = 'https://private-anon-b97c5a28b1-vinosmith.apiary-proxy.com/api/distributor/inventory'
@@ -58,6 +60,8 @@ def wines_to_db():
                 db.session.add(w)
                 db.session.commit()
         if count > 0 and wine['id'] not in wines_db:
+            # with correct data input on Vinomsith the following would simply be name = wine['name']
+            # the company I built this for included the producer as a prefix in the name which is removed here:
             name = ''.join(list(wine['name'])[len(wine['producer']['name'])+1:])
             if wine['country'] and wine['country'] not in countries_db:
                 country = Country(name=wine['country'])
